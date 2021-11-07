@@ -1,65 +1,36 @@
-import { combineReducers, createStore } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import actionTypes from "./action-types";
-import shortid from "shortid";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import rootReducer from "./reducers";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-const { ADD_CONTACT, DELETE_CONTACT, SET_FILTER } = actionTypes;
-
-const contactItemsReducer = (
-  state = JSON.parse(localStorage.getItem("contacts")) || [],
-  action
-) => {
-  switch (action.type) {
-    case ADD_CONTACT:
-      if (state.find((contact) => contact.name === action.payload.name)) {
-        alert(`${action.payload.name} is alrteady in contacts.`);
-        return state;
-      }
-
-      return [
-        ...state,
-        {
-          id: shortid.generate(),
-          name: action.payload.name,
-          number: action.payload.number,
-        },
-      ];
-
-    case DELETE_CONTACT:
-      return state.reduce((acc, el) => {
-        if (el.id !== action.payload.contactId) {
-          acc.push(el);
-        }
-        return acc;
-      }, []);
-
-    default:
-      return state;
-  }
+const persistConfig = {
+  key: "contacts",
+  storage,
+  blacklist: ["filter"],
 };
 
-const filterReducer = (state = "", action) => {
-  switch (action.type) {
-    case SET_FILTER:
-      return action.payload.filter;
+const middleware = [
+  ...getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  }),
+];
 
-    default:
-      return state;
-  }
-};
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const contactsReducer = combineReducers({
-  items: contactItemsReducer,
-  filter: filterReducer,
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware,
 });
 
-const rootReducer = combineReducers({
-  contacts: contactsReducer,
-});
-
-const store = createStore(
-  rootReducer /*, getLocalStorage */,
-  composeWithDevTools()
-);
-
-export default store;
+export const persistor = persistStore(store);

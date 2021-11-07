@@ -38,5 +38,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(Filter);
 
 Filter.propTypes = {
   filter: propTypes.string,
-  handleFilter: propTypes.func.isRequired,
+  setFilter: propTypes.func.isRequired,
 };

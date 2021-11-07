@@ -1,16 +1,8 @@
 import propTypes from "prop-types";
-import { useEffect } from "react";
 import { connect } from "react-redux";
 import actions from "../../redux/actions";
 
 function ContactList({ contacts, filter, deleteContact }) {
-  useEffect(() => {
-    if (!contacts) {
-      return;
-    }
-    localStorage.setItem("contacts", JSON.stringify(contacts));
-  }, [contacts]);
-
   return (
     <div>
       {contacts
