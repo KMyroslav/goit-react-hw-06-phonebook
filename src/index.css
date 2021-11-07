@@ -10,11 +10,12 @@ body {
 
 h1,
 h2 {
-  margin-bottom: 10px;
+  margin-top: 25px;
+  margin-bottom: 15px;
 }
 
 form {
-  margin-bottom: 35px;
+  margin-bottom: 10px;
 }
 
 button {
@@ -22,11 +23,15 @@ button {
 }
 
 label {
-  margin-left: 10px;
-  margin-right: 5px;
+  margin-left: 5px;
+  margin-bottom: 5px;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.input-wrapper {
+  display: inline-block;
 }
